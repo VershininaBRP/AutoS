@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        body {
+            background: #F5E1E1;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        .dashboard-card {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            padding: 1.8rem 2rem;
+            transition: all 0.2s ease;
+            border: 1px solid #D4D0CC;
+        }
+        .container.custom-container {
+            max-width: 1400px;
+            padding: 0;
+        }
+        h2 {
+            font-weight: 600;
+            color: #4A4A4A;
+            letter-spacing: -0.3px;
+            font-size: 1.85rem;
+        }
+        .btn-primary {
+            background: #B8B1AC;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.45rem 1.2rem;
+            font-weight: 500;
+            transition: 0.2s;
+            color: #2c2c2c;
+        }
+        .btn-primary:hover {
+            background: #a09a95;
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background: #E8C4C4;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.45rem 1.2rem;
+            font-weight: 500;
+            color: #4A4A4A;
+        }
+        .btn-danger:hover {
+            background: #dcb0b0;
+            transform: translateY(-1px);
+        }
+        .btn-warning {
+            background: #D4D0CC;
+            border: none;
+            border-radius: 2rem;
+            color: #4A4A4A;
+            font-weight: 500;
+        }
+        .btn-warning:hover {
+            background: #c2bdb8;
+        }
+        .btn-success {
+            background: #B8B1AC;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 500;
+            color: #2c2c2c;
+        }
+        .btn-success:hover {
+            background: #a09a95;
+            transform: translateY(-1px);
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #E8C4C4;
+            gap: 0.5rem;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            font-weight: 600;
+            color: #6b5f5a;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            transition: all 0.2s;
+            background: transparent;
+        }
+        .nav-tabs .nav-link.active {
+            background: #E8C4C4;
+            color: #4A4A4A;
+            border: none;
+        }
+        .nav-tabs .nav-link:hover:not(.active) {
+            background: #F5E1E1;
+            color: #4A4A4A;
+        }
+        .table {
+            border-radius: 1rem;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .table thead th {
+            background: #E8C4C4 !important;
+            color: #4A4A4A;
+            font-weight: 600;
+            border-bottom: none;
+            padding: 14px 12px;
+        }
+        .table tbody tr:hover {
+            background-color: #F5E1E1;
+        }
+        .table-bordered td, .table-bordered th {
+            border-color: #D4D0CC;
+        }
+        .modal-content {
+            border-radius: 1.5rem;
+            border: none;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
+            background: #ffffff;
+        }
+        .modal-header {
+            background: #F5E1E1;
+            border-bottom: 1px solid #E8C4C4;
+            border-radius: 1.5rem 1.5rem 0 0;
+        }
+        .modal-title {
+            font-weight: 700;
+            color: #4A4A4A;
+        }
+        .form-control, .form-select {
+            border-radius: 2rem;
+            border: 1px solid #D4D0CC;
+            background: white;
+            padding: 0.6rem 1rem;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #B8B1AC;
+            box-shadow: 0 0 0 3px rgba(184, 177, 172, 0.3);
+        }
+        .btn-close {
+            background-color: #B8B1AC;
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+        hr {
+            background: linear-gradient(90deg, #E8C4C4, #D4D0CC, #E8C4C4);
+            height: 2px;
+            opacity: 0.6;
+        }
+        footer {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 2rem;
+            color: #9b908b;
+        }
+        .badge-light {
+            background-color: #F5E1E1 !important;
+            color: #4A4A4A;
+        }
+        @media (max-width: 768px) {
+            .dashboard-card { padding: 1rem; }
+            .nav-tabs .nav-link { padding: 0.4rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container custom-container">
+    <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <h2>Управление автосервисом · Админ</h2>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-danger shadow-sm">Выйти</button>
+            </form>
+        </div>
+        <hr>
+
+        <ul class="nav nav-tabs mt-2">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#cars">Машины</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#masters">Мастера</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#mc">Связи</button></li>
+        </ul>
+
+        <div class="tab-content mt-4">
+            <!-- Машины -->
+            <div class="tab-pane active" id="cars">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-primary btn-sm" onclick="openCarModal()">+ Добавить автомобиль</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                        <tr><th>ID</th><th>Модель</th><th>Уникальный номер</th><th>Действия</th></tr>
+                        </thead>
+                        <tbody id="carsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Мастера -->
+            <div class="tab-pane" id="masters">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-primary btn-sm" onclick="openMasterModal()">+ Добавить мастера</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                        <tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Специальность</th><th>Действия</th></tr>
+                        </thead>
+                        <tbody id="mastersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Связи мастер-машина -->
+            <div class="tab-pane" id="mc">
+                <div class="row g-3 mb-4 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-secondary">Мастер</label>
+                        <select id="masterSelect" class="form-select"></select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-secondary">Автомобиль</label>
+                        <select id="carSelect" class="form-select"></select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100" onclick="addRelation()">Назначить</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr><th>Мастер</th><th>Машина</th><th>Удалить</th></tr>
+                        </thead>
+                        <tbody id="mcTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <footer>автоматизированная система автосервиса</footer>
+    </div>
+</div>
+
+<!-- Модалка машины -->
+<div class="modal fade" id="carModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Информация об автомобиле</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="carId">
+                <input type="text" id="carModel" class="form-control mb-3" placeholder="Модель (напр. Toyota Camry)">
+                <input type="text" id="carNumber" class="form-control" placeholder="Уникальный номер / госномер">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-primary" onclick="saveCar()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка мастера -->
+<div class="modal fade" id="masterModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Данные мастера</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="masterId">
+                <input type="text" id="masterName" class="form-control mb-3" placeholder="ФИО мастера">
+                <input type="text" id="masterPhone" class="form-control mb-3" placeholder="Телефон">
+                <input type="text" id="masterSpecialty" class="form-control" placeholder="Специальность (двигатель, электрика и т.д.)">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-primary" onclick="saveMaster()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let carModal, masterModal;
+    document.addEventListener('DOMContentLoaded', () => {
+        carModal = new bootstrap.Modal(document.getElementById('carModal'));
+        masterModal = new bootstrap.Modal(document.getElementById('masterModal'));
+        loadCars(); loadMasters(); loadRelations(); loadMasterSelect(); loadCarSelect();
+    });
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    function loadCars() { fetch('/api/admin/cars').then(r=>r.json()).then(data=>{ let h=''; data.forEach(c=>{ h+=`<tr><td>${c.id}</td><td>${escapeHtml(c.model)}</td><td><span class="badge bg-light text-dark px-3 py-1 rounded-pill">${escapeHtml(c.uniqueNumber)}</span></td><td><button class='btn btn-sm btn-warning me-1' onclick='editCar(${c.id})'>Ред</button> <button class='btn btn-sm btn-danger' onclick='deleteCar(${c.id})'>Уд</button></td></tr>`; }); document.getElementById('carsTable').innerHTML=h; }); }
+    function openCarModal() { document.getElementById('carId').value=''; document.getElementById('carModel').value=''; document.getElementById('carNumber').value=''; carModal.show(); }
+    function editCar(id) { fetch('/api/admin/cars/'+id).then(r=>r.json()).then(c=>{ document.getElementById('carId').value=c.id; document.getElementById('carModel').value=c.model; document.getElementById('carNumber').value=c.uniqueNumber; carModal.show(); }); }
+    function saveCar() { let id=document.getElementById('carId').value; let d={model:document.getElementById('carModel').value, uniqueNumber:document.getElementById('carNumber').value}; let m=id?'PUT':'POST'; let url=id?`/api/admin/cars/${id}`:'/api/admin/cars'; fetch(url,{method:m,headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(()=>{carModal.hide();loadCars();loadCarSelect();}); }
+    function deleteCar(id){ if(confirm('Удалить автомобиль навсегда?')) fetch(`/api/admin/cars/${id}`,{method:'DELETE'}).then(()=>{loadCars();loadCarSelect();loadRelations();}); }
+
+    function loadMasters() { fetch('/api/admin/masters').then(r=>r.json()).then(data=>{ let h=''; data.forEach(m=>{ h+=`<tr><td>${m.id}</td><td><strong>${escapeHtml(m.fullName)}</strong></td><td>${escapeHtml(m.phone)}</td><td>${escapeHtml(m.specialty)}</td><td><button class='btn btn-sm btn-warning me-1' onclick='editMaster(${m.id})'>Ред</button> <button class='btn btn-sm btn-danger' onclick='deleteMaster(${m.id})'>Уд</button></td></tr>`; }); document.getElementById('mastersTable').innerHTML=h; }); }
+    function openMasterModal() { document.getElementById('masterId').value=''; document.getElementById('masterName').value=''; document.getElementById('masterPhone').value=''; document.getElementById('masterSpecialty').value=''; masterModal.show(); }
+    function editMaster(id) { fetch('/api/admin/masters/'+id).then(r=>r.json()).then(m=>{ document.getElementById('masterId').value=m.id; document.getElementById('masterName').value=m.fullName; document.getElementById('masterPhone').value=m.phone; document.getElementById('masterSpecialty').value=m.specialty; masterModal.show(); }); }
+    function saveMaster() { let id=document.getElementById('masterId').value; let d={fullName:document.getElementById('masterName').value, phone:document.getElementById('masterPhone').value, specialty:document.getElementById('masterSpecialty').value}; let m=id?'PUT':'POST'; let url=id?`/api/admin/masters/${id}`:'/api/admin/masters'; fetch(url,{method:m,headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(()=>{masterModal.hide();loadMasters();loadMasterSelect();loadRelations();}); }
+    function deleteMaster(id){ if(confirm('Удалить мастера? Все связи будут потеряны.')) fetch(`/api/admin/masters/${id}`,{method:'DELETE'}).then(()=>{loadMasters();loadMasterSelect();loadRelations();}); }
+
+    function loadRelations() { fetch('/api/admin/master-cars').then(r=>r.json()).then(data=>{ let h=''; data.forEach(r=>{ h+=`<tr><td>${escapeHtml(r.master.fullName)}</td><td>${escapeHtml(r.car.model)} (${escapeHtml(r.car.uniqueNumber)})</td><td><button class='btn btn-sm btn-outline-danger rounded-pill' onclick='deleteRelation(${r.id})'>Удалить связь</button></td></tr>`; }); document.getElementById('mcTable').innerHTML=h; }); }
+    function loadMasterSelect() { fetch('/api/admin/masters').then(r=>r.json()).then(data=>{ let opts='<option value="" disabled selected>— выберите мастера —</option>'; data.forEach(m=>{ opts+=`<option value="${m.id}">${escapeHtml(m.fullName)}</option>`; }); document.getElementById('masterSelect').innerHTML=opts; }); }
+    function loadCarSelect() { fetch('/api/admin/cars').then(r=>r.json()).then(data=>{ let opts='<option value="" disabled selected>— выберите автомобиль —</option>'; data.forEach(c=>{ opts+=`<option value="${c.id}">${escapeHtml(c.model)} (${escapeHtml(c.uniqueNumber)})</option>`; }); document.getElementById('carSelect').innerHTML=opts; }); }
+    function addRelation() { let masterId=document.getElementById('masterSelect').value; let carId=document.getElementById('carSelect').value; if(!masterId||!carId){alert('Пожалуйста, выберите и мастера, и машину');return;} fetch(`/api/admin/master-cars?masterId=${masterId}&carId=${carId}`,{method:'POST'}).then(()=>loadRelations()); }
+    function deleteRelation(id){ if(confirm('Удалить назначение мастера на авто?')) fetch(`/api/admin/master-cars/${id}`,{method:'DELETE'}).then(()=>loadRelations()); }
+</script>
+</body>
+</html>
